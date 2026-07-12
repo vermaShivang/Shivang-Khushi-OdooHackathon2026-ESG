@@ -623,3 +623,93 @@ input:checked + .slider:before {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+/* Restructured Printable Report Rules */
+@media print {
+  /* Hide standard containers unless we are not printing a certificate */
+  body:not(:has(.print-cert-sheet)) .sidebar, 
+  body:not(:has(.print-cert-sheet)) .top-bar, 
+  body:not(:has(.print-cert-sheet)) .card:not(.print-report-sheet), 
+  body:not(:has(.print-cert-sheet)) form, 
+  body:not(:has(.print-cert-sheet)) header, 
+  body:not(:has(.print-cert-sheet)) footer {
+    display: none !important;
+  }
+  
+  body:not(:has(.print-cert-sheet)) .app-container, 
+  body:not(:has(.print-cert-sheet)) .main-content, 
+  body:not(:has(.print-cert-sheet)) .view-container, 
+  body:not(:has(.print-cert-sheet)) .print-report-sheet {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: white !important;
+    color: black !important;
+    overflow: visible !important;
+  }
+  
+  body:not(:has(.print-cert-sheet)) .print-report-sheet {
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    page-break-inside: avoid;
+    background: white !important;
+    color: black !important;
+  }
+
+  body:not(:has(.print-cert-sheet)) .print-report-sheet button,
+  body:not(:has(.print-cert-sheet)) .print-report-sheet .flex-between > div:last-child {
+    display: none !important;
+  }
+
+  body:not(:has(.print-cert-sheet)) .custom-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 24px !important;
+  }
+
+  body:not(:has(.print-cert-sheet)) .custom-table th, 
+  body:not(:has(.print-cert-sheet)) .custom-table td {
+    border: 1px solid #112217 !important;
+    padding: 10px 14px !important;
+    color: black !important;
+    font-size: 13px !important;
+    background-color: transparent !important;
+    text-align: left !important;
+  }
+
+  body:not(:has(.print-cert-sheet)) .custom-table th {
+    background-color: #f6f5ee !important;
+    font-weight: bold !important;
+    color: #112217 !important;
+  }
+
+  /* Isolate certificate element when certificate is printed */
+  body:has(.print-cert-sheet) *:not(.print-cert-sheet, .print-cert-sheet *) {
+    display: none !important;
+  }
+
+  body:has(.print-cert-sheet) {
+    background-color: white !important;
+  }
+
+  body:has(.print-cert-sheet) .print-cert-sheet {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 auto !important;
+    padding: 60px !important;
+    border: 12px double #112217 !important;
+    background-color: #faf8f2 !important;
+    color: #112217 !important;
+    text-align: center !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+  }
+}
+

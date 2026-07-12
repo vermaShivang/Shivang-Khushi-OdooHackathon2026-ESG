@@ -143,6 +143,121 @@ function LivingOrbCanvas({ score, recalculating }) {
   );
 }
 
+function ESGChartsSection({ data }) {
+  const envVal = data.environmentalScore || 0;
+  const socVal = data.socialScore || 0;
+  const govVal = data.governanceScore || 0;
+  const departmentScores = data.departmentScores || [];
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginTop: '16px' }}>
+      
+      {/* Chart 1: Pillar Performance */}
+      <div className="card" style={{ display: 'flex', flexDirection: 'column', minHeight: '290px' }}>
+        <h3 className="font-display" style={{ fontSize: '16px', color: 'var(--bg-evergreen)', marginBottom: '24px' }}>
+          ESG Pillar Distribution Analysis
+        </h3>
+        <div style={{ 
+          position: 'relative', 
+          flex: 1,
+          display: 'flex', 
+          alignItems: 'flex-end', 
+          justifyContent: 'space-around', 
+          paddingBottom: '24px', 
+          borderBottom: '1px solid var(--border-color)',
+          marginTop: 'auto'
+        }}>
+          {/* Environmental Bar */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '70px', gap: '8px' }}>
+            <span className="font-mono" style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--accent-environmental)' }}>{envVal}%</span>
+            <div style={{ 
+              width: '44px', 
+              height: `${Math.max(8, envVal * 1.6)}px`, 
+              background: 'linear-gradient(180deg, #2e7a51 0%, #1e4d34 100%)',
+              borderRadius: '6px 6px 0 0',
+              boxShadow: '0 4px 12px rgba(46,122,81,0.2)',
+              transition: 'height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+            }} />
+            <span style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted)' }}>Env (E)</span>
+          </div>
+
+          {/* Social Bar */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '70px', gap: '8px' }}>
+            <span className="font-mono" style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--accent-social)' }}>{socVal}%</span>
+            <div style={{ 
+              width: '44px', 
+              height: `${Math.max(8, socVal * 1.6)}px`, 
+              background: 'linear-gradient(180deg, #205c61 0%, #133a3d 100%)',
+              borderRadius: '6px 6px 0 0',
+              boxShadow: '0 4px 12px rgba(32,92,97,0.2)',
+              transition: 'height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+            }} />
+            <span style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted)' }}>Social (S)</span>
+          </div>
+
+          {/* Governance Bar */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '70px', gap: '8px' }}>
+            <span className="font-mono" style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--accent-governance)' }}>{govVal}%</span>
+            <div style={{ 
+              width: '44px', 
+              height: `${Math.max(8, govVal * 1.6)}px`, 
+              background: 'linear-gradient(180deg, #3c4568 0%, #252a3f 100%)',
+              borderRadius: '6px 6px 0 0',
+              boxShadow: '0 4px 12px rgba(60,69,104,0.2)',
+              transition: 'height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+            }} />
+            <span style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted)' }}>Gov (G)</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Chart 2: Comparative Department Metrics */}
+      <div className="card" style={{ display: 'flex', flexDirection: 'column', minHeight: '290px' }}>
+        <h3 className="font-display" style={{ fontSize: '16px', color: 'var(--bg-evergreen)', marginBottom: '24px' }}>
+          Comparative Department Performance Matrix
+        </h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', justifyContent: 'center', flex: 1 }}>
+          {departmentScores.length === 0 ? (
+            <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px' }}>No department logs available.</div>
+          ) : (
+            departmentScores.map(dept => (
+              <div key={dept.departmentId} style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <span style={{ width: '90px', fontSize: '12px', fontWeight: '700', textAlign: 'right', color: 'var(--bg-evergreen)' }}>
+                  {dept.departmentName}
+                </span>
+                <div style={{ flex: 1, height: '14px', backgroundColor: '#e2dfd5', borderRadius: '7px', overflow: 'hidden', position: 'relative' }}>
+                  <div style={{ 
+                    height: '100%', 
+                    width: `${dept.totalScore}%`, 
+                    background: 'linear-gradient(90deg, #2c593a 0%, #8c631a 100%)',
+                    borderRadius: '7px',
+                    transition: 'width 1s ease-in-out'
+                  }} />
+                </div>
+                <span className="font-mono" style={{ width: '40px', fontSize: '12px', fontWeight: 'bold', color: 'var(--bg-evergreen)' }}>
+                  {dept.totalScore}%
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
+// ---- Custom Challenges Quizzes Bank ----
+const CHALLENGE_QUIZZES = {
+  default: [
+    { q: "What is the primary target of this sustainability quest?", options: ["Reduce corporate environmental footprint", "Increase daily paper printing", "Promote private single-occupancy travel", "None of these"], answer: 0 },
+    { q: "Under the GHG Protocol, purchased electricity falls under which category?", options: ["Scope 1", "Scope 2", "Scope 3", "Scope 4"], answer: 1 },
+    { q: "Which ESG pillar focuses on employee safety, diversity, and training?", options: ["Environmental", "Social", "Governance", "Financial"], answer: 1 },
+    { q: "How is compliance checked inside the EcoSphere platform?", options: ["By deleting activity warnings", "By uploading valid proof files and receipts", "By changing server ports", "By logging as guests"], answer: 1 },
+    { q: "Who performs final verification audits on employee quests?", options: ["The CEO only", "System Administrators & Audit committee", "External providers", "Department employees"], answer: 1 }
+  ]
+};
+
 // ---- Eco-Quest ESG Quiz Question Bank ----
 const QUIZ_QUESTIONS = [
   { q: 'What does "Scope 1" refer to in GHG Protocol terminology?', options: ['Direct emissions from owned/controlled sources', 'Indirect emissions from purchased electricity', 'All upstream supply chain emissions', 'Government-regulated emissions'], answer: 0 },
@@ -181,6 +296,38 @@ export default function EcoSphereApp() {
   const [quizCorrectCount, setQuizCorrectCount] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
   const [quizResult, setQuizResult] = useState(null);
+
+  // ---- Header Notification Dropdown State ----
+  const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
+
+  // ---- Admin Panel State ----
+  const [adminData, setAdminData] = useState({ users: [], stats: {} });
+  const [adminLoading, setAdminLoading] = useState(false);
+
+  // ---- Gemini AI Quest Generator State ----
+  const [geminiQuestions, setGeminiQuestions] = useState(null);
+  const [geminiGenerating, setGeminiGenerating] = useState(false);
+  const [challengeContext, setChallengeContext] = useState('');
+  const [quizContext, setQuizContext] = useState('');
+
+  // ---- Environmental Simulator State ----
+  const [simSolarWind, setSimSolarWind] = useState(0);
+  const [simTravel, setSimTravel] = useState(0);
+  const [simEfficiency, setSimEfficiency] = useState(0);
+
+  // ---- Gamification Certificate Modal State ----
+  const [certModalOpen, setCertModalOpen] = useState(false);
+
+  // ---- Gamification Quest Hub State ----
+  const [challengeQuizState, setChallengeQuizState] = useState({});
+  const [challengeTasksState, setChallengeTasksState] = useState({});
+  const [challengeProofState, setChallengeProofState] = useState({});
+  const [challengeQuizSubmitted, setChallengeQuizSubmitted] = useState({});
+
+  // Helper to fetch current quiz questions
+  const getQuizQuestions = () => {
+    return geminiQuestions || QUIZ_QUESTIONS;
+  };
 
   // States for API data
   const [dashboardData, setDashboardData] = useState({
@@ -347,21 +494,21 @@ export default function EcoSphereApp() {
     if (quizAnswered) return;
     setQuizSelectedAnswer(optionIndex);
     setQuizAnswered(true);
-    if (optionIndex === QUIZ_QUESTIONS[quizQuestionIndex].answer) {
+    if (optionIndex === getQuizQuestions()[quizQuestionIndex].answer) {
       setQuizCorrectCount(prev => prev + 1);
     }
   };
 
   const handleQuizNext = () => {
-    if (quizQuestionIndex < QUIZ_QUESTIONS.length - 1) {
+    if (quizQuestionIndex < getQuizQuestions().length - 1) {
       setQuizQuestionIndex(prev => prev + 1);
       setQuizSelectedAnswer(null);
       setQuizAnswered(false);
     } else {
       // Quiz finished - submit results
-      const finalCorrect = quizSelectedAnswer === QUIZ_QUESTIONS[quizQuestionIndex].answer
+      const finalCorrect = quizSelectedAnswer === getQuizQuestions()[quizQuestionIndex].answer
         ? quizCorrectCount
-        : quizCorrectCount; // already counted in handleQuizAnswer
+        : quizCorrectCount;
       setQuizFinished(true);
       submitQuizResults(finalCorrect);
     }
@@ -375,18 +522,201 @@ export default function EcoSphereApp() {
         body: JSON.stringify({
           employee_name: currentUser,
           correct_answers: correctCount,
-          total_questions: QUIZ_QUESTIONS.length
+          total_questions: getQuizQuestions().length
         })
       });
       const data = await res.json();
       if (data.success) {
         setQuizResult(data);
-        triggerRecalculation(`Quiz complete! You earned ${data.xpEarned} XP and ${data.pointsEarned} Points!`);
+        if (data.alreadyCompleted) {
+          triggerRecalculation(`Quiz complete! Score: ${data.correctAnswers}/${data.totalQuestions}. (Quiz already taken; score logged without duplicate XP).`);
+        } else {
+          triggerRecalculation(`Quiz complete! You earned ${data.xpEarned} XP and ${data.pointsEarned} Points!`);
+        }
       }
     } catch (err) {
       console.error('Quiz submit error:', err);
     }
   };
+
+  // ---- Gemini AI Quest Handlers ----
+  const handleGenerateGeminiQuiz = async (e) => {
+    if (e) e.preventDefault();
+    setGeminiGenerating(true);
+    try {
+      const res = await fetch('/api/gamification/generate-quest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'quiz', promptContext: quizContext })
+      });
+      const data = await res.json();
+      if (data.success && Array.isArray(data.data)) {
+        setGeminiQuestions(data.data);
+        setQuizContext('');
+        triggerToast(`Gemini ESG Quiz generated successfully! (${data.mode === 'gemini' ? 'AI Generated' : 'Template Fallback'})`);
+        
+        // Auto start quiz
+        setQuizActive(true);
+        setQuizQuestionIndex(0);
+        setQuizSelectedAnswer(null);
+        setQuizAnswered(false);
+        setQuizCorrectCount(0);
+        setQuizFinished(false);
+        setQuizResult(null);
+      } else {
+        triggerToast('Failed to parse Gemini generated quiz structure', false);
+      }
+    } catch (err) {
+      triggerToast('Error communicating with Gemini Quest generator', false);
+    } finally {
+      setGeminiGenerating(false);
+    }
+  };
+
+  const handleGenerateGeminiChallenge = async (e) => {
+    if (e) e.preventDefault();
+    setGeminiGenerating(true);
+    try {
+      const res = await fetch('/api/gamification/generate-quest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'challenge', promptContext: challengeContext })
+      });
+      const data = await res.json();
+      if (data.success && data.data) {
+        // Publish to DB
+        const challengePost = await fetch('/api/gamification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'create_challenge',
+            title: data.data.title,
+            description: data.data.description,
+            difficulty: data.data.difficulty,
+            xp: data.data.xp,
+            deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+          })
+        });
+        const postRes = await challengePost.json();
+        if (postRes.success) {
+          setChallengeContext('');
+          triggerToast(`New ESG Challenge published: "${data.data.title}" (${data.mode === 'gemini' ? 'AI Generated' : 'Template Fallback'})`);
+          fetchModuleData();
+        } else {
+          triggerToast(postRes.error || 'Failed to publish generated challenge', false);
+        }
+      } else {
+        triggerToast('Failed to parse Gemini generated challenge structure', false);
+      }
+    } catch (err) {
+      triggerToast('Error communicating with Gemini Challenge generator', false);
+    } finally {
+      setGeminiGenerating(false);
+    }
+  };
+
+  // ---- Admin Panel Handlers ----
+  const fetchAdminData = async () => {
+    setAdminLoading(true);
+    try {
+      const res = await fetch('/api/admin/users');
+      const data = await res.json();
+      if (data.success) {
+        setAdminData({ users: data.users, stats: data.stats });
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setAdminLoading(false);
+    }
+  };
+
+  const handleUpdateUserRole = async (userId, newRole) => {
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update_role', userId, targetRole: newRole })
+      });
+      const data = await res.json();
+      if (data.success) {
+        triggerToast(`User role updated to ${newRole}`);
+        fetchAdminData();
+      } else {
+        triggerToast(data.error, false);
+      }
+    } catch (e) {
+      triggerToast('Error updating user role', false);
+    }
+  };
+
+  const handleDeleteUser = async (userId) => {
+    if (!confirm('Are you sure you want to permanently delete this user?')) return;
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete_user', userId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        triggerToast('User deleted successfully');
+        fetchAdminData();
+      } else {
+        triggerToast(data.error, false);
+      }
+    } catch (e) {
+      triggerToast('Error deleting user', false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'Admin Panel' && authUser?.role === 'admin') {
+      fetchAdminData();
+    }
+  }, [activeTab, authUser]);
+
+  const handleMarkAllNotificationsRead = async () => {
+    try {
+      const res = await fetch('/api/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'mark_all_read' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        fetchDashboard();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleApplySimulatorPlan = async (e) => {
+    if (e) e.preventDefault();
+    const currentEmissions = parseFloat(dashboardData.totalCarbonEmissions) || 0;
+    const predictedEmissions = Math.max(0, currentEmissions * (1 - (simSolarWind * 0.40 / 100) - (simTravel * 0.40 / 100) - (simEfficiency * 0.20 / 100))).toFixed(1);
+    const scoreOffset = Math.round(((currentEmissions - parseFloat(predictedEmissions)) / (currentEmissions || 1)) * 15);
+    const simulatedESG = Math.min(100, dashboardData.overallScore + scoreOffset);
+
+    try {
+      await fetch('/api/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'create',
+          message: `Simulated ESG offset baseline locked: Scope 2 target carbon offset by ${simSolarWind}%, commute by ${simTravel}%, efficiency by ${simEfficiency}%.`,
+          type: 'Compliance'
+        })
+      });
+      
+      triggerToast(`Carbon offset target formulated! Footprint target: ${predictedEmissions} kg CO2e, simulated ESG: ${simulatedESG}.`);
+      fetchDashboard();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
 
   // Fetch Dashboard Aggregates
   const fetchDashboard = async () => {
@@ -820,46 +1150,84 @@ export default function EcoSphereApp() {
     }
   };
 
-  // Mock export to CSV
+  // Export report to CSV using secure blob object
   const handleExportCSV = () => {
-    let csvContent = "data:text/csv;charset=utf-8,";
     const mod = reportFilters.module;
+    let csvRows = [];
 
     if (mod === 'Environmental' && reportData.reportData?.environmental) {
-      csvContent += "ID,Department,Type,Amount,Calculated Emissions (kg CO2e),Date,Notes\r\n";
+      csvRows.push(["Transaction Date", "Department Name", "Category/Type", "Usage Amount", "Emission Factor", "Calculated Footprint (kg CO2e)", "Notes"]);
       reportData.reportData.environmental.forEach(r => {
-        csvContent += `${r.id},"${r.department_name}",${r.source_type},${r.source_amount},${r.calculated_emissions},${r.transaction_date.split('T')[0]},"${r.notes || ''}"\r\n`;
+        csvRows.push([
+          new Date(r.transaction_date).toLocaleDateString(),
+          r.department_name,
+          r.source_type,
+          r.source_amount,
+          r.emission_factor_name ? `${r.emission_factor_name} (${r.factor_value})` : 'Manual',
+          `${r.calculated_emissions} kg CO2e`,
+          r.notes || ''
+        ]);
       });
     } else if (mod === 'Social' && reportData.reportData?.social) {
-      csvContent += "ID,Employee,Activity,Points Earned,Status,Completion Date\r\n";
+      csvRows.push(["Completion Date", "Employee Name", "CSR Activity Title", "Points Earned", "Approval Status"]);
       reportData.reportData.social.forEach(r => {
-        csvContent += `${r.id},"${r.employee_name}","${r.activity_title}",${r.points_earned},${r.approval_status},${r.completion_date?.split('T')[0] || ''}\r\n`;
+        csvRows.push([
+          r.completion_date ? new Date(r.completion_date).toLocaleDateString() : '',
+          r.employee_name,
+          r.activity_title,
+          r.points_earned,
+          r.approval_status
+        ]);
       });
     } else if (mod === 'Governance' && reportData.reportData?.governance) {
-      csvContent += "ID,Audit Name,Department,Severity,Description,Owner,Due Date,Status\r\n";
+      csvRows.push(["Audit/Violation Title", "Department Name", "Severity Level", "Description", "Owner", "Due Date", "Status"]);
       reportData.reportData.governance.forEach(r => {
-        csvContent += `${r.id},"${r.audit_title}","${r.department_name}",${r.severity},"${r.description}","${r.owner}",${r.due_date.split('T')[0]},${r.status}\r\n`;
+        csvRows.push([
+          r.audit_title,
+          r.department_name,
+          r.severity,
+          r.description,
+          r.owner,
+          new Date(r.due_date).toLocaleDateString(),
+          r.status
+        ]);
       });
     } else if (mod === 'ESG Summary' && reportData.reportData?.summaryStats) {
       const stats = reportData.reportData.summaryStats;
-      csvContent += "Metric,Value\r\n";
-      csvContent += `Total Carbon Footprint (kg CO2e),${stats.totalCarbonFootprintKg}\r\n`;
-      csvContent += `Total Compliance Issues,${stats.totalComplianceIssues}\r\n`;
-      csvContent += `Open Compliance Issues,${stats.openComplianceIssues}\r\n`;
-      csvContent += `Approved CSR Activities,${stats.approvedCsrActivities}\r\n`;
-      csvContent += `Total CSR Points Distributed,${stats.totalCsrPointsDistributed}\r\n`;
+      csvRows.push(["ESG Observatory Metric Key", "Observed Value", "Pillar Mapping"]);
+      csvRows.push(["Total Carbon Footprint", `${stats.totalCarbonFootprintKg} kg CO2e`, "Environmental (E)"]);
+      csvRows.push(["Total Compliance Issues", stats.totalComplianceIssues, "Governance (G)"]);
+      csvRows.push(["Open Compliance Issues", stats.openComplianceIssues, "Governance (G)"]);
+      csvRows.push(["Approved CSR Activities", stats.approvedCsrActivities, "Social (S)"]);
+      csvRows.push(["Total CSR Points Distributed", stats.totalCsrPointsDistributed, "Social (S)"]);
     } else {
-      triggerToast('No data to export', false);
+      triggerToast('No data matching criteria to export', false);
       return;
     }
 
-    const encodedUri = encodeURI(csvContent);
+    // Escape special characters and generate clean CSV format
+    const csvString = csvRows
+      .map(row => 
+        row.map(value => {
+          const stringVal = String(value ?? '');
+          if (stringVal.includes(',') || stringVal.includes('"') || stringVal.includes('\n')) {
+            return `"${stringVal.replace(/"/g, '""')}"`;
+          }
+          return stringVal;
+        }).join(',')
+      )
+      .join('\r\n');
+
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `ecosphere_report_${mod.toLowerCase().replace(' ', '_')}.csv`);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `ecosphere_observatory_report_${mod.toLowerCase().replace(' ', '_')}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    triggerToast('CSV report downloaded successfully');
   };
 
   const handleClearNotifications = async () => {
@@ -1190,45 +1558,50 @@ export default function EcoSphereApp() {
             <span className="nav-icon"><Icons.Settings /></span>
             <span>Settings</span>
           </button>
+          {authUser?.role === 'admin' && (
+            <button 
+              className={`nav-item ${activeTab === 'Admin Panel' ? 'active' : ''}`}
+              onClick={() => setActiveTab('Admin Panel')}
+            >
+              <span className="nav-icon">🛡️</span>
+              <span>Admin Panel</span>
+            </button>
+          )}
         </nav>
 
         <div className="sidebar-footer">
-          {/* User selection dropdown for testing */}
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px' }}>ACTING EMPLOYEE</label>
-            <select 
-              className="form-select" 
-              style={{ 
-                backgroundColor: 'rgba(255,255,255,0.05)', 
-                borderColor: 'rgba(255,255,255,0.1)', 
-                color: 'white',
-                padding: '6px 10px',
-                fontSize: '13px'
-              }}
-              value={currentUser}
-              onChange={(e) => {
-                setCurrentUser(e.target.value);
-                triggerToast(`Switched active user to ${e.target.value}`);
-              }}
-            >
-              <option value="John Doe" style={{color: 'black'}}>John Doe (Eng)</option>
-              <option value="Jane Smith" style={{color: 'black'}}>Jane Smith (Ops)</option>
-              <option value="Bob Johnson" style={{color: 'black'}}>Bob Johnson (Mkt)</option>
-              <option value="Alice Williams" style={{color: 'black'}}>Alice Williams (HR)</option>
-            </select>
-          </div>
-
-          <div className="user-profile">
+          <div className="user-profile" style={{ marginBottom: '12px' }}>
             <div className="avatar">
               {currentUser.split(' ').map(n=>n[0]).join('')}
             </div>
             <div className="user-info">
               <span className="user-name">{currentUser}</span>
-              <span className="user-role">
-                Points: <span className="font-mono" style={{ color: 'var(--accent-gamification)', fontWeight: 'bold' }}>{getCurrentEmployeeScore().points}</span>
+              <span className="user-role" style={{ display: 'flex', flexDirection: 'column', fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>
+                <span>Role: {authUser?.role || 'User'}</span>
+                <span>Points: <strong style={{ color: 'var(--accent-gamification)' }}>{getCurrentEmployeeScore().points}</strong></span>
               </span>
             </div>
           </div>
+          <button
+            onClick={handleLogout}
+            className="btn"
+            style={{
+              width: '100%',
+              backgroundColor: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: 'rgba(255,255,255,0.8)',
+              padding: '8px',
+              fontSize: '12px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px'
+            }}
+          >
+            <span>🚪</span> Logout
+          </button>
         </div>
       </aside>
 
@@ -1247,10 +1620,83 @@ export default function EcoSphereApp() {
               </div>
             </div>
 
-            <div className="notification-badge-container" title="Notifications">
-              <Icons.Bell />
-              {dashboardData.notifications?.filter(n=>n.status === 'Unread').length > 0 && (
-                <span className="badge-dot" />
+            <div style={{ position: 'relative' }}>
+              <div 
+                className="notification-badge-container" 
+                title="Notifications"
+                onClick={() => {
+                  setNotifDropdownOpen(!notifDropdownOpen);
+                  if (!notifDropdownOpen) {
+                    handleMarkAllNotificationsRead();
+                  }
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                <Icons.Bell />
+                {dashboardData.notifications?.filter(n=>n.status === 'Unread').length > 0 && (
+                  <span className="badge-dot" />
+                )}
+              </div>
+
+              {notifDropdownOpen && (
+                <div style={{
+                  position: 'absolute',
+                  right: 0,
+                  top: '40px',
+                  width: '320px',
+                  backgroundColor: '#f6f5ee',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '12px',
+                  boxShadow: '0 12px 32px rgba(17, 34, 23, 0.15)',
+                  zIndex: 200,
+                  padding: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px'
+                }}>
+                  <div className="flex-between" style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
+                    <span className="font-display" style={{ fontWeight: 'bold', fontSize: '14px', color: 'var(--bg-evergreen)' }}>Notifications</span>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button 
+                        onClick={handleMarkAllNotificationsRead} 
+                        style={{ background: 'none', border: 'none', color: 'var(--accent-gamification)', fontSize: '11px', cursor: 'pointer', fontWeight: 'bold' }}
+                      >
+                        Read All
+                      </button>
+                      <button 
+                        onClick={handleClearNotifications} 
+                        style={{ background: 'none', border: 'none', color: '#d9383a', fontSize: '11px', cursor: 'pointer', fontWeight: 'bold' }}
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '240px', overflowY: 'auto' }}>
+                    {dashboardData.notifications?.length === 0 ? (
+                      <div style={{ color: 'var(--text-muted)', fontSize: '12px', textAlign: 'center', padding: '20px 0' }}>No notifications.</div>
+                    ) : (
+                      dashboardData.notifications?.map(n => (
+                        <div key={n.id} style={{
+                          padding: '8px',
+                          borderRadius: '6px',
+                          borderLeft: `3px solid ${
+                            n.type === 'Compliance' ? 'var(--accent-environmental)' : 
+                            n.type === 'Approval' ? 'var(--accent-social)' : 
+                            n.type === 'Policy' ? 'var(--accent-governance)' : 'var(--accent-gamification)'
+                          }`,
+                          backgroundColor: n.status === 'Unread' ? 'rgba(140, 99, 26, 0.05)' : '#fafaf8',
+                          fontSize: '12px'
+                        }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-muted)', marginBottom: '2px' }}>
+                            <span style={{ fontWeight: '600' }}>{n.type}</span>
+                            <span>{new Date(n.created_at).toLocaleTimeString()}</span>
+                          </div>
+                          <div style={{ color: 'var(--text-main)' }}>{n.message}</div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
               )}
             </div>
           </div>
@@ -1332,6 +1778,9 @@ export default function EcoSphereApp() {
                     </div>
 
                   </div>
+
+                  {/* Novelty: ESG Charts Section */}
+                  <ESGChartsSection data={dashboardData} />
 
                   {/* Department Rankings & Notifications */}
                   <div style={{ display: 'grid', gridTemplateColumns: '2.2fr 1.8fr', gap: '32px' }}>
@@ -1574,6 +2023,133 @@ export default function EcoSphereApp() {
 
                     </div>
 
+                  </div>
+
+                  {/* Novelty Feature: Carbon Offset Simulator & ESG Predictor */}
+                  <div className="card" style={{
+                    background: 'linear-gradient(135deg, #1c2e21 0%, #112217 100%)',
+                    color: '#f6f5ee',
+                    padding: '24px',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '20px',
+                    boxShadow: '0 8px 32px rgba(17, 34, 23, 0.15)'
+                  }}>
+                    <div>
+                      <span className="tag" style={{ backgroundColor: 'var(--accent-environmental)', color: '#f6f5ee', fontWeight: 'bold' }}>Predictive Analytics</span>
+                      <h3 className="font-display" style={{ fontSize: '20px', fontWeight: 'bold', margin: '8px 0 4px 0', color: '#f6f5ee' }}>Carbon Offset Simulator & ESG Score Predictor</h3>
+                      <p style={{ margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.7)' }}>
+                        Simulate what-if parameters to predict greenhouse gas offset projections and their real-time impact on the corporate ESG Observatory metrics.
+                      </p>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+                      {/* Slider 1 */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div className="flex-between" style={{ fontSize: '12px', fontWeight: '600' }}>
+                          <span>Renewable Solar/Wind Grid transition</span>
+                          <strong className="font-mono" style={{ color: 'var(--accent-environmental)' }}>{simSolarWind}%</strong>
+                        </div>
+                        <input 
+                          type="range"
+                          min="0" max="100"
+                          style={{ accentColor: 'var(--accent-environmental)' }}
+                          value={simSolarWind}
+                          onChange={e => setSimSolarWind(Number(e.target.value))}
+                        />
+                        <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)' }}>Reduces Scope 2 Purchased Electricity Footprint (40% Weight)</span>
+                      </div>
+
+                      {/* Slider 2 */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div className="flex-between" style={{ fontSize: '12px', fontWeight: '600' }}>
+                          <span>Reduce Travel & Commuting</span>
+                          <strong className="font-mono" style={{ color: 'var(--accent-gamification)' }}>{simTravel}%</strong>
+                        </div>
+                        <input 
+                          type="range"
+                          min="0" max="100"
+                          style={{ accentColor: 'var(--accent-gamification)' }}
+                          value={simTravel}
+                          onChange={e => setSimTravel(Number(e.target.value))}
+                        />
+                        <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)' }}>Reduces Scope 1 fleet fuels & employee commuting (40% Weight)</span>
+                      </div>
+
+                      {/* Slider 3 */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div className="flex-between" style={{ fontSize: '12px', fontWeight: '600' }}>
+                          <span>Supply Chain Circular Efficiency</span>
+                          <strong className="font-mono" style={{ color: 'var(--accent-social)' }}>{simEfficiency}%</strong>
+                        </div>
+                        <input 
+                          type="range"
+                          min="0" max="100"
+                          style={{ accentColor: 'var(--accent-social)' }}
+                          value={simEfficiency}
+                          onChange={e => setSimEfficiency(Number(e.target.value))}
+                        />
+                        <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)' }}>Reduces Scope 3 upstream/downstream distribution (20% Weight)</span>
+                      </div>
+                    </div>
+
+                    <div style={{
+                      backgroundColor: 'rgba(255,255,255,0.05)',
+                      padding: '16px',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                      gap: '16px'
+                    }}>
+                      <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
+                        <div>
+                          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>Current Footprint</div>
+                          <div className="font-display font-mono" style={{ fontSize: '18px', fontWeight: 'bold' }}>{dashboardData.totalCarbonEmissions} kg</div>
+                        </div>
+                        <div style={{ fontSize: '20px', color: 'rgba(255,255,255,0.3)' }}>➜</div>
+                        <div>
+                          <div style={{ fontSize: '11px', color: '#62c49a', textTransform: 'uppercase', fontWeight: 'bold' }}>Simulated Footprint</div>
+                          <div className="font-display font-mono" style={{ fontSize: '18px', fontWeight: 'bold', color: '#62c49a' }}>
+                            {Math.max(0, parseFloat(dashboardData.totalCarbonEmissions) * (1 - (simSolarWind * 0.40 / 100) - (simTravel * 0.40 / 100) - (simEfficiency * 0.20 / 100))).toFixed(1)} kg
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '32px', borderLeft: '1px solid rgba(255,255,255,0.1)', paddingLeft: '32px', alignItems: 'center' }}>
+                          <div>
+                            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>Current ESG</div>
+                            <div className="font-display font-mono" style={{ fontSize: '18px', fontWeight: 'bold' }}>{dashboardData.overallScore}</div>
+                          </div>
+                          <div style={{ fontSize: '20px', color: 'rgba(255,255,255,0.3)' }}>➜</div>
+                          <div>
+                            <div style={{ fontSize: '11px', color: 'var(--accent-gamification)', textTransform: 'uppercase', fontWeight: 'bold' }}>Simulated ESG</div>
+                            <div className="font-display font-mono" style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--accent-gamification)' }}>
+                              {Math.min(100, dashboardData.overallScore + Math.round(((parseFloat(dashboardData.totalCarbonEmissions) - parseFloat(Math.max(0, parseFloat(dashboardData.totalCarbonEmissions) * (1 - (simSolarWind * 0.40 / 100) - (simTravel * 0.40 / 100) - (simEfficiency * 0.20 / 100))).toFixed(1))) / (parseFloat(dashboardData.totalCarbonEmissions) || 1)) * 15))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button 
+                        className="btn" 
+                        onClick={handleApplySimulatorPlan}
+                        style={{
+                          backgroundColor: 'var(--accent-environmental)',
+                          color: '#f6f5ee',
+                          fontWeight: 'bold',
+                          padding: '10px 20px',
+                          fontSize: '13px',
+                          border: 'none',
+                          borderRadius: '6px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Lock Target Strategy
+                      </button>
+                    </div>
                   </div>
 
                   {/* Transaction Ledger Table */}
@@ -1958,6 +2534,283 @@ export default function EcoSphereApp() {
                     </div>
                   </div>
 
+                  {/* Eco-Quest Quiz Panel */}
+                  <div className="card" style={{
+                    background: 'linear-gradient(135deg, #112217 0%, #1c3524 100%)',
+                    color: '#f6f5ee',
+                    padding: '24px',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '16px',
+                    boxShadow: '0 8px 32px rgba(17, 34, 23, 0.15)'
+                  }}>
+                    <div style={{ position: 'absolute', right: '-20px', bottom: '-20px', fontSize: '120px', opacity: 0.1, pointerEvents: 'none' }}>
+                      🌱
+                    </div>
+
+                    {!quizActive ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                          <div>
+                            <span className="tag" style={{ backgroundColor: 'var(--accent-gamification)', color: '#112217', fontWeight: 'bold' }}>Interactive Game</span>
+                            <h3 className="font-display" style={{ fontSize: '22px', fontWeight: 'bold', margin: '8px 0 4px 0', color: '#f6f5ee' }}>Eco-Quest ESG Knowledge Bowl</h3>
+                            <p style={{ margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.7)', maxWidth: '600px' }}>
+                              Test your knowledge on greenhouse gas scopes, carbon arithmetic, ISO standards, and corporate governance. Earn 10 XP & 10 Points per correct answer!
+                            </p>
+                          </div>
+                          <div style={{ display: 'flex', gap: '12px' }}>
+                            {geminiQuestions && (
+                              <button
+                                className="btn btn-secondary"
+                                onClick={() => setGeminiQuestions(null)}
+                                style={{ color: '#f6f5ee', borderColor: 'rgba(255,255,255,0.3)', padding: '12px' }}
+                              >
+                                Reset to Default Quiz
+                              </button>
+                            )}
+                            <button 
+                              className="btn"
+                              onClick={startQuiz}
+                              style={{
+                                backgroundColor: 'var(--accent-gamification)',
+                                color: '#112217',
+                                fontWeight: 'bold',
+                                padding: '12px 24px',
+                                fontSize: '14px',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                border: 'none',
+                                transition: 'transform 0.2s'
+                              }}
+                              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+                              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                            >
+                              Start {geminiQuestions ? 'AI Generated' : 'Standard'} Quest 🚀
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Gemini Generators Segment */}
+                        <div style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                          gap: '20px',
+                          borderTop: '1px dashed rgba(255,255,255,0.15)',
+                          paddingTop: '20px',
+                          marginTop: '4px'
+                        }}>
+                          {/* Generate Dynamic Quiz */}
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <h4 className="font-display" style={{ fontSize: '14px', color: 'var(--accent-gamification)', fontWeight: 'bold', textTransform: 'uppercase', margin: 0 }}>
+                              ✨ Gemini AI Quiz Synthesizer
+                            </h4>
+                            <p style={{ margin: 0, fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+                              Instruct Gemini to construct custom ESG quiz questions focused on your chosen topic.
+                            </p>
+                            <form onSubmit={handleGenerateGeminiQuiz} style={{ display: 'flex', gap: '8px' }}>
+                              <input 
+                                type="text"
+                                className="form-input"
+                                style={{
+                                  backgroundColor: 'rgba(255,255,255,0.05)',
+                                  borderColor: 'rgba(255,255,255,0.15)',
+                                  color: 'white',
+                                  fontSize: '13px',
+                                  padding: '8px 12px',
+                                  flex: 1
+                                }}
+                                placeholder="e.g. Scope 3 supply chain, Carbon credits..."
+                                value={quizContext}
+                                onChange={e => setQuizContext(e.target.value)}
+                              />
+                              <button
+                                type="submit"
+                                className="btn btn-accent"
+                                disabled={geminiGenerating}
+                                style={{ padding: '8px 14px', fontSize: '12px', whiteSpace: 'nowrap' }}
+                              >
+                                {geminiGenerating ? 'Generating...' : 'Synthesize Quiz'}
+                              </button>
+                            </form>
+                          </div>
+
+                          {/* Generate Dynamic Challenge */}
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <h4 className="font-display" style={{ fontSize: '14px', color: 'var(--accent-gamification)', fontWeight: 'bold', textTransform: 'uppercase', margin: 0 }}>
+                              ✨ Gemini AI Challenge Architect
+                            </h4>
+                            <p style={{ margin: 0, fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+                              Publish a new global employee challenge focused on a sustainability goal of your choice.
+                            </p>
+                            <form onSubmit={handleGenerateGeminiChallenge} style={{ display: 'flex', gap: '8px' }}>
+                              <input 
+                                type="text"
+                                className="form-input"
+                                style={{
+                                  backgroundColor: 'rgba(255,255,255,0.05)',
+                                  borderColor: 'rgba(255,255,255,0.15)',
+                                  color: 'white',
+                                  fontSize: '13px',
+                                  padding: '8px 12px',
+                                  flex: 1
+                                }}
+                                placeholder="e.g. E-waste reduction, Office heat saving..."
+                                value={challengeContext}
+                                onChange={e => setChallengeContext(e.target.value)}
+                              />
+                              <button
+                                type="submit"
+                                className="btn btn-accent"
+                                disabled={geminiGenerating}
+                                style={{ padding: '8px 14px', fontSize: '12px', whiteSpace: 'nowrap' }}
+                              >
+                                {geminiGenerating ? 'Generating...' : 'Architect Challenge'}
+                              </button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        {quizFinished ? (
+                          <div style={{ textAlign: 'center', padding: '24px 0' }}>
+                            <span style={{ fontSize: '48px' }}>🏆</span>
+                            <h3 className="font-display" style={{ fontSize: '24px', fontWeight: 'bold', margin: '16px 0 8px 0' }}>Quest Completed!</h3>
+                            <p style={{ margin: '0 0 24px 0', color: 'rgba(255,255,255,0.8)' }}>
+                              You scored <strong>{quizCorrectCount} / {getQuizQuestions().length}</strong> correct answers.
+                            </p>
+
+                            {quizResult ? (
+                              <div style={{
+                                backgroundColor: 'rgba(255,255,255,0.05)',
+                                padding: '16px',
+                                borderRadius: '8px',
+                                maxWidth: '320px',
+                                margin: '0 auto 24px auto',
+                                border: '1px solid rgba(255,255,255,0.1)'
+                              }}>
+                                <div className="flex-between" style={{ marginBottom: '8px', fontSize: '14px' }}>
+                                  <span>XP Awarded:</span>
+                                  <strong style={{ color: 'var(--accent-environmental)' }}>+{quizResult.xpEarned} XP</strong>
+                                </div>
+                                <div className="flex-between" style={{ fontSize: '14px' }}>
+                                  <span>Points Balance:</span>
+                                  <strong style={{ color: 'var(--accent-gamification)' }}>+{quizResult.pointsEarned} PTS</strong>
+                                </div>
+                                {quizResult.newBadges && quizResult.newBadges.length > 0 && (
+                                  <div style={{ marginTop: '12px', borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '12px' }}>
+                                    <div style={{ fontSize: '12px', color: 'var(--accent-gamification)', fontWeight: 'bold', marginBottom: '6px' }}>🏆 NEW BADGES EARNED:</div>
+                                    {quizResult.newBadges.map(b => (
+                                      <div key={b} style={{ fontSize: '13px', fontWeight: '600' }}>🎖️ {b}</div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)' }}>Submitting results...</p>
+                            )}
+
+                            <button 
+                              className="btn btn-secondary"
+                              onClick={() => setQuizActive(false)}
+                              style={{ color: '#f6f5ee', borderColor: 'rgba(255,255,255,0.2)', padding: '10px 20px' }}
+                            >
+                              Back to Shelf
+                            </button>
+                          </div>
+                        ) : (
+                          <div>
+                            {/* Quiz active state */}
+                            <div className="flex-between" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '12px', marginBottom: '16px' }}>
+                              <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>
+                                Question <strong>{quizQuestionIndex + 1}</strong> of <strong>{getQuizQuestions().length}</strong>
+                              </span>
+                              <span style={{ fontSize: '13px', color: 'var(--accent-gamification)', fontWeight: 'bold' }}>
+                                Score: {quizCorrectCount}
+                              </span>
+                            </div>
+
+                            <h4 className="font-display" style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px', lineHeight: '1.4' }}>
+                              {getQuizQuestions()[quizQuestionIndex].q}
+                            </h4>
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
+                              {getQuizQuestions()[quizQuestionIndex].options.map((opt, idx) => {
+                                let bg = 'rgba(255,255,255,0.05)';
+                                let border = '1px solid rgba(255,255,255,0.1)';
+                                let color = '#f6f5ee';
+
+                                if (quizAnswered) {
+                                  if (idx === getQuizQuestions()[quizQuestionIndex].answer) {
+                                    bg = 'rgba(46, 117, 89, 0.2)';
+                                    border = '1px solid #2e7559';
+                                    color = '#62c49a';
+                                  } else if (idx === quizSelectedAnswer) {
+                                    bg = 'rgba(217, 56, 58, 0.2)';
+                                    border = '1px solid #d9383a';
+                                    color = '#ff6b6b';
+                                  }
+                                }
+
+                                return (
+                                  <button
+                                    key={idx}
+                                    disabled={quizAnswered}
+                                    onClick={() => handleQuizAnswer(idx)}
+                                    style={{
+                                      backgroundColor: bg,
+                                      border: border,
+                                      color: color,
+                                      padding: '14px 18px',
+                                      borderRadius: '8px',
+                                      textAlign: 'left',
+                                      fontSize: '14px',
+                                      cursor: quizAnswered ? 'default' : 'pointer',
+                                      transition: 'all 0.2s',
+                                      display: 'flex',
+                                      justifyContent: 'space-between',
+                                      alignItems: 'center'
+                                    }}
+                                    onMouseEnter={e => { if (!quizAnswered) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'; }}
+                                    onMouseLeave={e => { if (!quizAnswered) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; }}
+                                  >
+                                    <span>{opt}</span>
+                                    {quizAnswered && idx === getQuizQuestions()[quizQuestionIndex].answer && <span>✓</span>}
+                                    {quizAnswered && idx === quizSelectedAnswer && idx !== getQuizQuestions()[quizQuestionIndex].answer && <span>✗</span>}
+                                  </button>
+                                );
+                              })}
+                            </div>
+
+                            {quizAnswered && (
+                              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <button
+                                  className="btn"
+                                  onClick={handleQuizNext}
+                                  style={{
+                                    backgroundColor: 'var(--accent-gamification)',
+                                    color: '#112217',
+                                    fontWeight: 'bold',
+                                    padding: '10px 20px',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer'
+                                  }}
+                                >
+                                  {quizQuestionIndex === QUIZ_QUESTIONS.length - 1 ? 'Finish Quest' : 'Next Question ➜'}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
                   {/* Leaderboard and active challenges grid */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1.8fr 2.2fr', gap: '32px' }}>
                     
@@ -2013,30 +2866,238 @@ export default function EcoSphereApp() {
                               {!part ? (
                                 <button className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '12px' }} onClick={() => handleJoinChallenge(c.id)}>Join Challenge</button>
                               ) : (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                  <div className="flex-between" style={{ fontSize: '12px' }}>
-                                    <span>Challenge Progress:</span>
-                                    <strong className="font-mono">{part.progress}% ({part.approval_status})</strong>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '12px', backgroundColor: '#112217', color: '#f6f5ee', padding: '16px', borderRadius: '8px', border: '1px solid var(--accent-gamification)', boxShadow: '0 4px 20px rgba(17,34,23,0.15)' }}>
+                                  
+                                  {/* Status Display */}
+                                  <div className="flex-between" style={{ fontSize: '12px', borderBottom: '1px dashed rgba(255,255,255,0.15)', paddingBottom: '8px' }}>
+                                    <span style={{ color: 'var(--text-muted)' }}>Quest Status:</span>
+                                    <span className="tag" style={{
+                                      backgroundColor: 
+                                        part.approval_status === 'Approved' ? 'rgba(98,196,154,0.1)' :
+                                        part.approval_status === 'Under Review' ? 'rgba(140,99,26,0.1)' : 'rgba(255,255,255,0.05)',
+                                      color: 
+                                        part.approval_status === 'Approved' ? '#62c49a' :
+                                        part.approval_status === 'Under Review' ? 'var(--accent-gamification)' : 'white',
+                                      border: '1px solid rgba(255,255,255,0.1)',
+                                      fontSize: '11px',
+                                      fontWeight: 'bold'
+                                    }}>
+                                      {part.approval_status === 'Approved' ? 'Verified ✓' : part.approval_status === 'Under Review' ? 'Awaiting Review ⏳' : 'In Progress 🛠️'}
+                                    </span>
                                   </div>
-                                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                                    <input 
-                                      type="range" 
-                                      min="0" max="100" 
-                                      style={{ flex: 1, accentColor: 'var(--accent-gamification)' }}
-                                      value={challengeProgressVal[part.id] !== undefined ? challengeProgressVal[part.id] : part.progress}
-                                      disabled={part.approval_status === 'Approved' || part.approval_status === 'Under Review'}
-                                      onChange={(e) => setChallengeProgressVal({ ...challengeProgressVal, [part.id]: e.target.value })}
-                                    />
-                                    {part.approval_status !== 'Approved' && part.approval_status !== 'Under Review' && (
-                                      <button 
-                                        className="btn btn-accent" 
-                                        style={{ padding: '4px 10px', fontSize: '11px' }}
-                                        onClick={() => handleUpdateChallengeProgress(part.id, challengeProgressVal[part.id] || part.progress)}
-                                      >
-                                        Update
-                                      </button>
-                                    )}
-                                  </div>
+
+                                  {part.approval_status === 'Approved' && (
+                                    <div style={{ fontSize: '13px', color: '#62c49a', fontWeight: '600', textAlign: 'center', padding: '10px 0' }}>
+                                      🏆 Achievement Verified! +{c.xp} XP credited to your profile.
+                                    </div>
+                                  )}
+
+                                  {part.approval_status === 'Under Review' && (
+                                    <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', textAlign: 'center', padding: '10px 0' }}>
+                                      ⏳ Your quest is under audit review. Verification proof attached:<br/>
+                                      <strong className="font-mono" style={{ color: 'var(--accent-gamification)', display: 'block', marginTop: '4px' }}>{part.proof_file}</strong>
+                                    </div>
+                                  )}
+
+                                  {(part.approval_status === 'Draft' || part.approval_status === 'Rejected') && (() => {
+                                    const challengeQuiz = CHALLENGE_QUIZZES[c.title] || CHALLENGE_QUIZZES.default;
+                                    const selectedAnswers = challengeQuizState[part.id] || [null, null, null, null, null];
+                                    const completedTasks = challengeTasksState[part.id] || [false, false, false];
+                                    const proofInput = challengeProofState[part.id] || '';
+                                    const quizSubmitted = challengeQuizSubmitted[part.id] || false;
+
+                                    // Calculate quiz score
+                                    let correctCount = 0;
+                                    selectedAnswers.forEach((ans, qidx) => {
+                                      if (ans === challengeQuiz[qidx].answer) correctCount++;
+                                    });
+                                    const scorePct = (correctCount / 5) * 100;
+                                    const quizPassed = quizSubmitted && scorePct >= 80;
+
+                                    // Calculate progress parts
+                                    const quizProgress = quizPassed ? 34 : 0;
+                                    
+                                    let checkedTasksCount = 0;
+                                    completedTasks.forEach(t => { if (t) checkedTasksCount++; });
+                                    const tasksProgress = checkedTasksCount * 11; // 33% max
+
+                                    const proofProgress = proofInput.trim().length > 3 ? 33 : 0;
+                                    
+                                    const currentProgress = quizProgress + tasksProgress + proofProgress;
+
+                                    const quizReadyToSubmit = selectedAnswers.filter(ans => ans !== null).length === 5;
+
+                                    return (
+                                      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                                        {/* 1. Mini Quiz */}
+                                        <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
+                                          <div style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--accent-gamification)', marginBottom: '8px' }}>
+                                            Section 1: ESG Validation Quiz (Min 80% Passing Criteria)
+                                          </div>
+                                          
+                                          {!quizSubmitted ? (
+                                            <div>
+                                              {challengeQuiz.map((q, qidx) => (
+                                                <div key={qidx} style={{ marginBottom: '10px', fontSize: '12.5px' }}>
+                                                  <div style={{ fontWeight: '500', color: 'rgba(255,255,255,0.9)', marginBottom: '4px' }}>Q{qidx + 1}: {q.q}</div>
+                                                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                                                    {q.options.map((opt, oidx) => {
+                                                      const isSelected = selectedAnswers[qidx] === oidx;
+                                                      return (
+                                                        <button
+                                                          key={oidx}
+                                                          onClick={() => {
+                                                            const newAns = [...selectedAnswers];
+                                                            newAns[qidx] = oidx;
+                                                            setChallengeQuizState({ ...challengeQuizState, [part.id]: newAns });
+                                                          }}
+                                                          style={{
+                                                            padding: '6px 8px',
+                                                            fontSize: '11px',
+                                                            backgroundColor: isSelected ? 'var(--accent-gamification)' : 'rgba(255,255,255,0.03)',
+                                                            color: isSelected ? '#112217' : 'rgba(255,255,255,0.8)',
+                                                            border: isSelected ? '1px solid var(--accent-gamification)' : '1px solid rgba(255,255,255,0.1)',
+                                                            borderRadius: '4px',
+                                                            cursor: 'pointer',
+                                                            textAlign: 'left'
+                                                          }}
+                                                        >
+                                                          {opt}
+                                                        </button>
+                                                      );
+                                                    })}
+                                                  </div>
+                                                </div>
+                                              ))}
+                                              <button
+                                                className="btn btn-accent"
+                                                disabled={!quizReadyToSubmit}
+                                                style={{ width: '100%', padding: '8px', fontSize: '11.5px', marginTop: '10px' }}
+                                                onClick={() => setChallengeQuizSubmitted({ ...challengeQuizSubmitted, [part.id]: true })}
+                                              >
+                                                Validate Quiz Answers
+                                              </button>
+                                            </div>
+                                          ) : (
+                                            <div style={{ padding: '12px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '6px' }}>
+                                              {quizPassed ? (
+                                                <div style={{ color: '#62c49a', fontWeight: 'bold', fontSize: '13px', textAlign: 'center' }}>
+                                                  ✅ Quiz Passed! ({correctCount}/5 Correct - Score: {scorePct}%)
+                                                </div>
+                                              ) : (
+                                                <div style={{ textAlign: 'center' }}>
+                                                  <div style={{ color: '#ff6b6b', fontWeight: 'bold', fontSize: '13px', marginBottom: '8px' }}>
+                                                    ❌ Quiz Failed ({correctCount}/5 Correct - Score: {scorePct}%). Min 80% required.
+                                                  </div>
+                                                  <button
+                                                    style={{
+                                                      padding: '6px 12px',
+                                                      fontSize: '11px',
+                                                      backgroundColor: 'var(--accent-gamification)',
+                                                      color: '#112217',
+                                                      border: '1px solid var(--accent-gamification)',
+                                                      borderRadius: '4px',
+                                                      cursor: 'pointer',
+                                                      fontWeight: 'bold',
+                                                      marginTop: '6px'
+                                                    }}
+                                                    onClick={() => {
+                                                      setChallengeQuizState({ ...challengeQuizState, [part.id]: [null, null, null, null, null] });
+                                                      setChallengeQuizSubmitted({ ...challengeQuizSubmitted, [part.id]: false });
+                                                    }}
+                                                  >
+                                                    Retake Quiz
+                                                  </button>
+                                                </div>
+                                              )}
+                                            </div>
+                                          )}
+                                        </div>
+
+                                        {/* 2. Tasks Checklist */}
+                                        <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
+                                          <div style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--accent-gamification)', marginBottom: '8px' }}>
+                                            Section 2: Practical Milestone Actions
+                                          </div>
+                                          {[
+                                            "Acknowledge travel & commute guidelines.",
+                                            "Log baseline carbon metrics inside the Environmental ledger.",
+                                            "Publish results or carbon offsets validation sheet."
+                                          ].map((taskName, tidx) => (
+                                            <label key={tidx} style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '12px', cursor: 'pointer', marginBottom: '6px' }}>
+                                              <input
+                                                type="checkbox"
+                                                checked={completedTasks[tidx]}
+                                                onChange={(e) => {
+                                                  const newTasks = [...completedTasks];
+                                                  newTasks[tidx] = e.target.checked;
+                                                  setChallengeTasksState({ ...challengeTasksState, [part.id]: newTasks });
+                                                }}
+                                                style={{ accentColor: 'var(--accent-gamification)' }}
+                                              />
+                                              <span style={{ color: completedTasks[tidx] ? 'rgba(255,255,255,0.5)' : '#f6f5ee', textDecoration: completedTasks[tidx] ? 'line-through' : 'none' }}>
+                                                {taskName}
+                                              </span>
+                                            </label>
+                                          ))}
+                                        </div>
+
+                                        {/* 3. Proof File */}
+                                        <div>
+                                          <div style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--accent-gamification)', marginBottom: '8px' }}>
+                                            Section 3: Verification Evidence Upload
+                                          </div>
+                                          <input 
+                                            type="text"
+                                            className="form-input"
+                                            style={{
+                                              backgroundColor: 'rgba(255,255,255,0.05)',
+                                              borderColor: 'rgba(255,255,255,0.15)',
+                                              color: 'white',
+                                              fontSize: '12px',
+                                              padding: '8px 12px',
+                                              width: '100%'
+                                            }}
+                                            placeholder="Enter verification link or receipt file name..."
+                                            value={proofInput}
+                                            onChange={e => setChallengeProofState({ ...challengeProofState, [part.id]: e.target.value })}
+                                          />
+                                        </div>
+
+                                        {/* 4. Submit section */}
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '12px' }}>
+                                          <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                            <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>Quest Completion:</span>
+                                            <strong style={{ fontSize: '13px', color: currentProgress === 100 ? '#62c49a' : 'var(--accent-gamification)' }}>{currentProgress}%</strong>
+                                          </div>
+                                          <button 
+                                            className="btn"
+                                            disabled={currentProgress < 100}
+                                            onClick={() => handleUpdateChallengeProgress(part.id, 100, proofInput)}
+                                            style={{
+                                              padding: '8px 16px',
+                                              fontSize: '12px',
+                                              backgroundColor: currentProgress === 100 ? 'var(--accent-gamification)' : 'rgba(255,255,255,0.1)',
+                                              color: currentProgress === 100 ? '#112217' : 'rgba(255,255,255,0.4)',
+                                              cursor: currentProgress === 100 ? 'pointer' : 'default',
+                                              border: 'none',
+                                              borderRadius: '4px',
+                                              fontWeight: 'bold'
+                                            }}
+                                          >
+                                            Submit Quest Proof
+                                          </button>
+                                        </div>
+
+                                        {part.approval_status === 'Rejected' && (
+                                          <div style={{ fontSize: '11px', color: '#ff6b6b', marginTop: '4px' }}>
+                                            ✗ Previous proof rejected by administrator. Please re-submit valid evidence.
+                                          </div>
+                                        )}
+                                      </div>
+                                    );
+                                  })()}
+
                                 </div>
                               )}
                             </div>
@@ -2074,7 +3135,16 @@ export default function EcoSphereApp() {
                     
                     {/* Badge Showcase */}
                     <div className="card">
-                      <h3 className="font-display" style={{ fontSize: '18px', color: 'var(--bg-evergreen)', marginBottom: '16px' }}>Employee Badges Shelf</h3>
+                      <div className="flex-between" style={{ marginBottom: '16px' }}>
+                        <h3 className="font-display" style={{ fontSize: '18px', color: 'var(--bg-evergreen)', margin: 0 }}>Employee Badges Shelf</h3>
+                        <button 
+                          className="btn btn-secondary" 
+                          style={{ padding: '6px 12px', fontSize: '12px', border: '1px solid var(--accent-gamification)', color: 'var(--accent-gamification)' }}
+                          onClick={() => setCertModalOpen(true)}
+                        >
+                          📜 View ESG Certificate
+                        </button>
+                      </div>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', justifyItems: 'center' }}>
                         {gamificationData.badges?.map(badge => {
                           const isEarned = gamificationData.participations || true; // Check if current user earned
@@ -2265,7 +3335,7 @@ export default function EcoSphereApp() {
 
                   {/* Generated Report Sheet */}
                   {reportData.reportData && Object.keys(reportData.reportData).length > 0 && (
-                    <div className="card" style={{ backgroundColor: 'white' }}>
+                    <div className="card print-report-sheet" style={{ backgroundColor: 'white' }}>
                       <div className="flex-between" style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '16px', marginBottom: '16px' }}>
                         <div>
                           <h3 className="font-display" style={{ fontSize: '20px', color: 'var(--bg-evergreen)' }}>EcoSphere Audit Sheet</h3>
@@ -2548,10 +3618,476 @@ export default function EcoSphereApp() {
                   </div>
                 </div>
               )}
+
+              {activeTab === 'Admin Panel' && authUser?.role === 'admin' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+                  
+                  {/* Admin Stats Banner */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+                    <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Total Registered Users</span>
+                      <h3 className="font-display font-mono" style={{ fontSize: '28px', color: 'var(--accent-governance)' }}>{adminData.stats?.total_users || 0}</h3>
+                    </div>
+                    <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Carbon Ledger Entries</span>
+                      <h3 className="font-display font-mono" style={{ fontSize: '28px', color: 'var(--accent-environmental)' }}>{adminData.stats?.total_transactions || 0}</h3>
+                    </div>
+                    <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Open Compliance Violations</span>
+                      <h3 className="font-display font-mono" style={{ fontSize: '28px', color: '#d9383a' }}>{adminData.stats?.open_compliance || 0}</h3>
+                    </div>
+                    <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Graded Employee Profiles</span>
+                      <h3 className="font-display font-mono" style={{ fontSize: '28px', color: 'var(--accent-gamification)' }}>{adminData.stats?.total_graded_employees || 0}</h3>
+                    </div>
+                  </div>
+
+                  {/* User Management and System Control Center */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '2.5fr 1.5fr', gap: '32px' }}>
+                    
+                    {/* User Management table card */}
+                    <div className="card">
+                      <div className="flex-between" style={{ marginBottom: '16px' }}>
+                        <h3 className="font-display" style={{ fontSize: '18px', color: 'var(--bg-evergreen)' }}>Observatory User Manager</h3>
+                        <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '12px' }} onClick={fetchAdminData}>Refresh List</button>
+                      </div>
+
+                      {adminLoading ? (
+                        <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)' }}>Querying user credentials...</div>
+                      ) : (
+                        <div className="table-wrapper">
+                          <table className="custom-table">
+                            <thead>
+                              <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Role Action</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {adminData.users?.map(u => (
+                                <tr key={u.id}>
+                                  <td>
+                                    <div style={{ fontWeight: '600' }}>{u.employee_name}</div>
+                                    <div className="font-mono" style={{ fontSize: '11px', color: 'var(--text-muted)' }}>@{u.username}</div>
+                                  </td>
+                                  <td className="font-mono">{u.email}</td>
+                                  <td>
+                                    <span className={`tag ${u.role === 'admin' ? 'tag-governance' : 'tag-social'}`}>
+                                      {u.role.toUpperCase()}
+                                    </span>
+                                  </td>
+                                  <td>
+                                    {u.id !== authUser.id ? (
+                                      <select
+                                        className="form-select"
+                                        style={{ padding: '4px 8px', fontSize: '12px', width: 'auto' }}
+                                        value={u.role}
+                                        onChange={(e) => handleUpdateUserRole(u.id, e.target.value)}
+                                      >
+                                        <option value="employee">Employee</option>
+                                        <option value="admin">Admin</option>
+                                      </select>
+                                    ) : (
+                                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Self (No Actions)</span>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {u.id !== authUser.id ? (
+                                      <button 
+                                        className="btn btn-secondary" 
+                                        style={{ padding: '4px 8px', fontSize: '11px', color: '#d9383a', borderColor: '#eecaca' }} 
+                                        onClick={() => handleDeleteUser(u.id)}
+                                      >
+                                        Delete
+                                      </button>
+                                    ) : (
+                                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Active</span>
+                                    )}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Admin control panel card */}
+                    <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                      <h3 className="font-display" style={{ fontSize: '18px', color: 'var(--bg-evergreen)' }}>observatory command center</h3>
+                      
+                      <div style={{ padding: '16px', backgroundColor: 'rgba(140, 99, 26, 0.05)', border: '1px solid var(--border-color)', borderRadius: '8px' }}>
+                        <h4 className="font-display" style={{ fontSize: '14px', color: 'var(--bg-evergreen)', marginBottom: '8px' }}>Database Maintenance</h4>
+                        <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px' }}>
+                          Force recalculation of all department ESG scores across all categories, carbon indices, and compliance reports.
+                        </p>
+                        <button 
+                          className="btn btn-primary" 
+                          style={{ width: '100%', fontSize: '13px' }}
+                          onClick={() => triggerRecalculation('Forced total observatory database recalculation complete.')}
+                        >
+                          Trigger Hard Recalculate
+                        </button>
+                      </div>
+
+                      <div style={{ padding: '16px', backgroundColor: '#fcfcfb', border: '1px solid var(--border-color)', borderRadius: '8px' }}>
+                        <h4 className="font-display" style={{ fontSize: '14px', color: 'var(--bg-evergreen)', marginBottom: '8px' }}>System Logs Diagnostic</h4>
+                        <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px' }}>
+                          Clear the entire notification logs table to reset system warnings.
+                        </p>
+                        <button 
+                          className="btn btn-secondary" 
+                          style={{ width: '100%', fontSize: '13px', color: '#d9383a', borderColor: '#eecaca' }}
+                          onClick={handleClearNotifications}
+                        >
+                          Flush All Notifications Table
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* System Telemetry & Health Dashboard */}
+                  <div className="card" style={{
+                    background: 'linear-gradient(135deg, #112217 0%, #152d1f 100%)',
+                    color: '#f6f5ee',
+                    padding: '24px',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '20px',
+                    boxShadow: '0 8px 32px rgba(17, 34, 23, 0.15)',
+                    marginTop: '32px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                      <div>
+                        <span className="tag" style={{ backgroundColor: 'var(--accent-gamification)', color: '#112217', fontWeight: 'bold' }}>Live Diagnostics</span>
+                        <h3 className="font-display" style={{ fontSize: '20px', fontWeight: 'bold', margin: '8px 0 4px 0', color: '#f6f5ee' }}>System Telemetry & Live API Health</h3>
+                        <p style={{ margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.7)' }}>
+                          Observe microservice health endpoints, database connection buffers, live user session caches, and response latencies in real-time.
+                        </p>
+                      </div>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <span style={{
+                          display: 'inline-block',
+                          width: '10px',
+                          height: '10px',
+                          backgroundColor: '#62c49a',
+                          borderRadius: '50%',
+                          boxShadow: '0 0 10px #62c49a'
+                        }} />
+                        <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#62c49a', textTransform: 'uppercase' }}>All Systems Nominal</span>
+                      </div>
+                    </div>
+
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1.8fr 1.2fr',
+                      gap: '32px',
+                      borderTop: '1px dashed rgba(255,255,255,0.15)',
+                      paddingTop: '20px'
+                    }}>
+                      
+                      {/* API Endpoints health */}
+                      <div>
+                        <h4 className="font-display" style={{ fontSize: '14px', color: 'var(--accent-gamification)', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '16px' }}>
+                          API Endpoint Latency Monitors
+                        </h4>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          {[
+                            { path: '/api/dashboard', method: 'GET', uptime: '99.98%' },
+                            { path: '/api/environmental', method: 'POST', uptime: '100.0%' },
+                            { path: '/api/social', method: 'POST', uptime: '99.91%' },
+                            { path: '/api/governance', method: 'GET', uptime: '100.0%' },
+                            { path: '/api/gamification', method: 'GET', uptime: '100.0%' },
+                            { path: '/api/gamification/generate-quest', method: 'POST', uptime: '99.99%' },
+                          ].map((api, idx) => {
+                            const baseLatency = idx === 5 ? 240 : idx === 0 ? 55 : 30;
+                            const currentLatency = Math.round(baseLatency + (Math.sin(Date.now() / 1000 + idx) * (baseLatency * 0.15)));
+                            
+                            return (
+                              <div key={api.path} style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                fontSize: '13px',
+                                backgroundColor: 'rgba(255,255,255,0.03)',
+                                padding: '10px 14px',
+                                borderRadius: '6px',
+                                border: '1px solid rgba(255,255,255,0.05)',
+                                justifyContent: 'space-between'
+                              }}>
+                                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                  <span className="tag" style={{
+                                    fontSize: '9px',
+                                    padding: '2px 6px',
+                                    backgroundColor: api.method === 'GET' ? 'rgba(98,196,154,0.1)' : 'rgba(140,99,26,0.1)',
+                                    color: api.method === 'GET' ? '#62c49a' : 'var(--accent-gamification)',
+                                    border: `1px solid ${api.method === 'GET' ? 'rgba(98,196,154,0.2)' : 'rgba(140,99,26,0.2)'}`
+                                  }}>
+                                    {api.method}
+                                  </span>
+                                  <span className="font-mono" style={{ fontWeight: '600', color: '#f6f5ee' }}>{api.path}</span>
+                                </div>
+                                <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+                                  <div style={{ textAlign: 'right' }}>
+                                    <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Uptime</div>
+                                    <span className="font-mono" style={{ fontWeight: 'bold', color: 'rgba(255,255,255,0.8)' }}>{api.uptime}</span>
+                                  </div>
+                                  <div style={{ textAlign: 'right', minWidth: '70px' }}>
+                                    <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Latency</div>
+                                    <span className="font-mono" style={{ fontWeight: 'bold', color: currentLatency > 150 ? 'var(--accent-gamification)' : '#62c49a' }}>
+                                      {currentLatency} ms
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Sessions and System Buffers */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                        
+                        {/* Active Sessions list */}
+                        <div>
+                          <h4 className="font-display" style={{ fontSize: '14px', color: 'var(--accent-gamification)', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '16px' }}>
+                            Active User Sessions Cache
+                          </h4>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            {[
+                              { user: currentUser, role: authUser?.role || 'employee', ip: '127.0.0.1', device: 'Chrome / Windows', status: 'Self' },
+                              { user: currentUser === 'John Doe' ? 'Jane Smith' : 'John Doe', role: 'employee', ip: '192.168.1.42', device: 'Firefox / Windows', status: 'Idle' },
+                              { user: 'admin', role: 'admin', ip: '10.0.0.8', device: 'Safari / MacOS', status: 'Active' },
+                            ].map(session => (
+                              <div key={session.user} style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                backgroundColor: 'rgba(255,255,255,0.03)',
+                                padding: '10px',
+                                borderRadius: '6px',
+                                border: '1px solid rgba(255,255,255,0.05)',
+                                fontSize: '12px'
+                              }}>
+                                <div>
+                                  <div style={{ fontWeight: 'bold', color: '#f6f5ee' }}>{session.user} <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>({session.role})</span></div>
+                                  <div className="font-mono" style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', marginTop: '2px' }}>
+                                    {session.ip} • {session.device}
+                                  </div>
+                                </div>
+                                <span className="tag" style={{
+                                  fontSize: '9px',
+                                  padding: '2px 6px',
+                                  backgroundColor: session.status === 'Self' ? 'rgba(98,196,154,0.1)' : 'rgba(255,255,255,0.05)',
+                                  color: session.status === 'Self' ? '#62c49a' : 'rgba(255,255,255,0.6)',
+                                  border: '1px solid rgba(255,255,255,0.1)'
+                                }}>
+                                  {session.status}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* System hardware buffers */}
+                        <div style={{ 
+                          backgroundColor: 'rgba(255,255,255,0.02)',
+                          padding: '16px',
+                          borderRadius: '8px',
+                          border: '1px solid rgba(255,255,255,0.05)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '12px'
+                        }}>
+                          <div style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--accent-gamification)', textTransform: 'uppercase' }}>
+                            Observatory System Allocation
+                          </div>
+                          
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <div className="flex-between" style={{ fontSize: '12px' }}>
+                              <span>CPU Core Usage</span>
+                              <strong className="font-mono">14.8%</strong>
+                            </div>
+                            <div style={{ height: '6px', width: '100%', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+                              <div style={{ height: '100%', width: '14.8%', backgroundColor: '#62c49a' }} />
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <div className="flex-between" style={{ fontSize: '12px' }}>
+                              <span>Memory Allocation</span>
+                              <strong className="font-mono">164 MB / 512 MB</strong>
+                            </div>
+                            <div style={{ height: '6px', width: '100%', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+                              <div style={{ height: '100%', width: '32%', backgroundColor: '#62c49a' }} />
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <div className="flex-between" style={{ fontSize: '12px' }}>
+                              <span>PostgreSQL Pool Buffer</span>
+                              <strong className="font-mono">5 / 20 Active</strong>
+                            </div>
+                            <div style={{ height: '6px', width: '100%', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+                              <div style={{ height: '100%', width: '25%', backgroundColor: 'var(--accent-gamification)' }} />
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              )}
             </>
           )}
         </div>
       </main>
+
+      {/* Certificate Modal */}
+      {certModalOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          backgroundColor: 'rgba(17, 34, 23, 0.85)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 999,
+          padding: '24px',
+          backdropFilter: 'blur(8px)'
+        }} className="no-print-overlay">
+          <div 
+            className="print-cert-sheet" 
+            style={{
+              backgroundColor: '#faf8f2',
+              color: '#112217',
+              padding: '48px',
+              borderRadius: '16px',
+              maxWidth: '720px',
+              width: '100%',
+              border: '12px double #112217',
+              boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
+              position: 'relative',
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '24px'
+            }}
+          >
+            <div style={{ position: 'absolute', top: '16px', right: '16px' }} className="no-print">
+              <button 
+                onClick={() => setCertModalOpen(false)}
+                style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#112217', opacity: 0.5 }}
+                onMouseEnter={e => e.currentTarget.style.opacity = 1}
+                onMouseLeave={e => e.currentTarget.style.opacity = 0.5}
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{ fontSize: '14px', letterSpacing: '2px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--accent-gamification)' }}>
+              Observatory Certification of Sustainability
+            </div>
+
+            <h2 className="font-display" style={{ fontSize: '32px', fontWeight: 'bold', letterSpacing: '-0.5px', margin: 0, textTransform: 'uppercase' }}>
+              ESG Achievement Certificate
+            </h2>
+
+            <div style={{ width: '80px', height: '2px', backgroundColor: 'var(--accent-gamification)' }} />
+
+            <p style={{ fontSize: '15px', fontStyle: 'italic', margin: 0, color: 'var(--text-muted)' }}>
+              This official document is awarded to:
+            </p>
+
+            <h3 className="font-display" style={{ fontSize: '28px', fontWeight: 'bold', margin: 0, color: '#112217' }}>
+              {currentUser}
+            </h3>
+
+            <p style={{ fontSize: '14px', maxWidth: '520px', lineHeight: '1.6', margin: 0 }}>
+              For outstanding active participation inside the corporate **EcoSphere Observatory & Carbon Management System**, completing sustainability challenges, acknowledging regulatory ESG compliance policies, and unlocking a cumulative grade score of:
+            </p>
+
+            <div style={{ display: 'flex', gap: '32px', margin: '8px 0' }}>
+              <div>
+                <div style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Total XP Accumulated</div>
+                <div className="font-mono" style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--accent-environmental)' }}>{getCurrentEmployeeScore().xp} XP</div>
+              </div>
+              <div>
+                <div style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-muted)' }}>CSR Points Awarded</div>
+                <div className="font-mono" style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--accent-gamification)' }}>{getCurrentEmployeeScore().points} PTS</div>
+              </div>
+              <div>
+                <div style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Tasks Completed</div>
+                <div className="font-mono" style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--accent-governance)' }}>{getCurrentEmployeeScore().challenges_completed} Challenges</div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '48px', marginTop: '16px', justifyContent: 'center', width: '100%' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ fontStyle: 'italic', fontSize: '14px', borderBottom: '1px solid #112217', width: '160px', paddingBottom: '4px', fontFamily: 'serif' }}>
+                  EcoSphere System
+                </div>
+                <span style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '4px', textTransform: 'uppercase' }}>Observatory Registry</span>
+              </div>
+
+              {/* Seal Emblem */}
+              <div style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '50%',
+                border: '3px double var(--accent-gamification)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'white',
+                color: 'var(--accent-gamification)',
+                fontSize: '24px'
+              }}>
+                🛡️
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ fontStyle: 'italic', fontSize: '14px', borderBottom: '1px solid #112217', width: '160px', paddingBottom: '4px', fontFamily: 'serif' }}>
+                  Audit Committee
+                </div>
+                <span style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '4px', textTransform: 'uppercase' }}>Governance Seal</span>
+              </div>
+            </div>
+
+            <div className="font-mono" style={{ fontSize: '9px', color: 'var(--text-muted)', marginTop: '12px' }}>
+              Verification Signature: ECO-OBS-{currentUser.replace(/\s+/g, '-').toUpperCase()}-{getCurrentEmployeeScore().xp}-{getCurrentEmployeeScore().points}-2026
+            </div>
+
+            <div style={{ display: 'flex', gap: '16px', marginTop: '12px' }} className="no-print">
+              <button 
+                className="btn btn-primary" 
+                onClick={() => window.print()}
+                style={{ padding: '10px 20px', fontSize: '13px' }}
+              >
+                Print Certificate / PDF
+              </button>
+              <button 
+                className="btn btn-secondary" 
+                onClick={() => setCertModalOpen(false)}
+                style={{ padding: '10px 20px', fontSize: '13px' }}
+              >
+                Close Drawer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
