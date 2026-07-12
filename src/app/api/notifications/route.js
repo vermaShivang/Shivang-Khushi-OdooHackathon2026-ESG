@@ -25,6 +25,15 @@ export async function POST(request) {
       return NextResponse.json({ success: true });
     }
 
+    if (action === 'create') {
+      const { message, type } = body;
+      await query(`
+        INSERT INTO notifications (message, type, status)
+        VALUES ($1, $2, 'Unread')
+      `, [message, type || 'Compliance']);
+      return NextResponse.json({ success: true });
+    }
+
     return NextResponse.json({ success: false, error: 'Invalid action' }, { status: 400 });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
