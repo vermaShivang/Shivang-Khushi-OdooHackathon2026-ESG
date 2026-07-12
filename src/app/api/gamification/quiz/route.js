@@ -17,34 +17,61 @@ export async function POST(request) {
 
     await client.query('BEGIN');
 
-    // Upsert employee scores
+    // 1. Create table if not exists
     await client.query(`
-      INSERT INTO employee_scores (employee_name, xp, points, challenges_completed, csr_completed)
-      VALUES ($1, $2, $3, 0, 0)
-      ON CONFLICT (employee_name) DO UPDATE SET
-        xp = employee_scores.xp + EXCLUDED.xp,
-        points = employee_scores.points + EXCLUDED.points
-    `, [employee_name, xpEarned, pointsEarned]);
+      CREATE TABLE IF NOT EXISTS quiz_attempts (
+        id SERIAL PRIMARY KEY,
+        employee_name VARCHAR(255) NOT NULL UNIQUE,
+        score INTEGER NOT NULL,
+        attempted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
-    // Create notification for the quiz completion
-    await createNotification(
-      `${employee_name} completed the Eco-Quest Quiz! Score: ${correct_answers}/${total_questions} (${xpEarned} XP earned)`,
-      'Badge',
-      client
-    );
+    // 2. Check if already attempted
+    const checkAttempt = await client.query(`
+      SELECT 1 FROM quiz_attempts WHERE employee_name = $1
+    `, [employee_name]);
 
-    // Check for badge awards
-    const newBadges = await checkAndAwardBadges(employee_name, client);
+    const alreadyCompleted = checkAttempt.rowCount > 0;
+    const finalXp = alreadyCompleted ? 0 : xpEarned;
+    const finalPoints = alreadyCompleted ? 0 : pointsEarned;
+
+    if (!alreadyCompleted) {
+      // 3. Save attempt record
+      await client.query(`
+        INSERT INTO quiz_attempts (employee_name, score)
+        VALUES ($1, $2)
+      `, [employee_name, correct_answers]);
+
+      // 4. Upsert employee scores
+      await client.query(`
+        INSERT INTO employee_scores (employee_name, xp, points, challenges_completed, csr_completed)
+        VALUES ($1, $2, $3, 0, 0)
+        ON CONFLICT (employee_name) DO UPDATE SET
+          xp = employee_scores.xp + EXCLUDED.xp,
+          points = employee_scores.points + EXCLUDED.points
+      `, [employee_name, finalXp, finalPoints]);
+
+      // 5. Create notification for the quiz completion
+      await createNotification(
+        `${employee_name} completed the Eco-Quest Quiz! Score: ${correct_answers}/${total_questions} (${finalXp} XP earned)`,
+        'Badge',
+        client
+      );
+
+      // 6. Check for badge awards
+      await checkAndAwardBadges(employee_name, client);
+    }
 
     await client.query('COMMIT');
 
     return NextResponse.json({
       success: true,
-      xpEarned,
-      pointsEarned,
+      xpEarned: finalXp,
+      pointsEarned: finalPoints,
       correctAnswers: correct_answers,
       totalQuestions: total_questions,
-      newBadges
+      alreadyCompleted
     });
   } catch (error) {
     await client.query('ROLLBACK');

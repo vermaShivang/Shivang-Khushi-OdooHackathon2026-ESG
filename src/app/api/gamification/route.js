@@ -254,15 +254,27 @@ export async function POST(request) {
     // 5. CREATE NEW CHALLENGE (ADMIN)
     if (action === 'create_challenge') {
       const { title, category_id, description, xp, difficulty, evidence_required, deadline } = body;
-      if (!title || !category_id || !xp || !difficulty || !deadline) {
+      if (!title || !xp || !difficulty || !deadline) {
         return NextResponse.json({ success: false, error: 'Missing required fields' }, { status: 400 });
+      }
+
+      let resolvedCategoryId = category_id;
+      if (!resolvedCategoryId) {
+        // Query the first available category
+        const catRes = await query(`SELECT id FROM categories LIMIT 1`);
+        if (catRes.rowCount > 0) {
+          resolvedCategoryId = catRes.rows[0].id;
+        } else {
+          // If no categories exist, we might need a default or return error
+          return NextResponse.json({ success: false, error: 'No categories available in database. Set up categories first.' }, { status: 400 });
+        }
       }
 
       const res = await query(`
         INSERT INTO challenges (title, category_id, description, xp, difficulty, evidence_required, deadline, status)
         VALUES ($1, $2, $3, $4, $5, $6, $7, 'Active')
         RETURNING *
-      `, [title, category_id, description, xp, difficulty, evidence_required, deadline]);
+      `, [title, resolvedCategoryId, description, xp, difficulty, evidence_required || null, deadline]);
 
       await createNotification(
         `New challenge added: "${title}". Difficulty: ${difficulty}. XP reward: ${xp}.`,
@@ -274,7 +286,9 @@ export async function POST(request) {
 
     return NextResponse.json({ success: false, error: 'Invalid action' }, { status: 400 });
   } catch (error) {
-    await client.query('ROLLBACK');
+    try {
+      await client.query('ROLLBACK');
+    } catch (e) {}
     console.error('Gamification POST error:', error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   } finally {
