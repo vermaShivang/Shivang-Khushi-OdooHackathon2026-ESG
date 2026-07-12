@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EcoSphere — Direct-Read Demo Script</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm 16mm 15mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    color: #1a202c; line-height: 1.55; font-size: 10.5pt; margin: 0; padding: 0; background: #fff;
+  }
+  h1 {
+    font-size: 20pt; color: #0f3e26; border-bottom: 3px solid #0f3e26;
+    padding-bottom: 8px; margin: 0 0 6px 0;
+  }
+  h2 {
+    font-size: 13.5pt; color: #114a2e; border-bottom: 1px solid #d7e3dc;
+    padding-bottom: 5px; margin: 22px 0 10px 0; page-break-after: avoid;
+  }
+  h3 { font-size: 11.5pt; color: #1a4d33; margin: 16px 0 6px 0; page-break-after: avoid; }
+  p { margin: 0 0 9px 0; }
+  .subtitle { color: #4a5568; font-size: 10pt; margin-bottom: 4px; }
+  blockquote {
+    background: #f5faf6; border-left: 4px solid #0f3e26; margin: 8px 0 12px 0;
+    padding: 10px 14px; font-style: italic; color: #22402f;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 9pt; }
+  th, td { border: 1px solid #cbd5e0; padding: 7px 9px; text-align: left; vertical-align: top; }
+  th { background: #0f3e26; color: #fff; font-weight: 600; }
+  tr:nth-child(even) { background: #f6faf7; }
+  ul, ol { margin: 6px 0 12px 20px; padding: 0; }
+  li { margin-bottom: 5px; }
+  code {
+    font-family: 'Consolas','Courier New',monospace; background: #eef2f0;
+    padding: 1px 5px; border-radius: 4px; font-size: 9pt; color: #8a3b39;
+  }
+  pre {
+    background: #14261c; color: #eaf4ee; padding: 11px 13px; border-radius: 6px;
+    font-family: 'Consolas','Courier New',monospace; font-size: 9pt; overflow-x: auto; margin: 8px 0 12px 0;
+  }
+  .chapter {
+    border: 1px solid #dbe6e0; border-left: 5px solid #0f3e26; border-radius: 6px;
+    padding: 12px 15px; margin-bottom: 15px; page-break-inside: avoid; background: #fff;
+  }
+  .timestamp {
+    display: inline-block; background: #e6f4ea; color: #137333; font-weight: 700;
+    padding: 3px 9px; border-radius: 4px; font-size: 9.5pt; margin-bottom: 8px;
+  }
+  .action { font-size: 9.8pt; color: #2d3748; margin: 4px 0 8px 0; }
+  .action b { color: #0f3e26; }
+  .align {
+    font-size: 8.8pt; color: #4a5568; background: #eef2f0; padding: 4px 9px;
+    border-radius: 4px; display: inline-block; margin-top: 4px;
+  }
+  .callout {
+    background: #fff8ec; border: 1px solid #f0d9a8; border-radius: 6px;
+    padding: 10px 14px; margin: 10px 0; font-size: 9.6pt;
+  }
+  .lead { font-size: 10.5pt; color: #2d3748; margin-bottom: 12px; }
+  hr { border: none; border-top: 1px solid #e2e8f0; margin: 18px 0; }
+</style>
+</head>
+<body>
+
+<h1>EcoSphere — Direct-Read Demo Script</h1>
+<p class="subtitle">ESG Management &amp; Carbon Observatory Platform &nbsp;•&nbsp; Odoo Hackathon &nbsp;•&nbsp; ~8 minute walkthrough</p>
+<p class="subtitle">Format: <b>[⏱ time] — 🖱 what to click — 🎤 read this aloud.</b> Read the 🎤 lines verbatim.</p>
+
+<h2>Project Analysis — What's Actually Built (verified against code)</h2>
+<table>
+  <thead>
+    <tr><th style="width:18%;">Layer</th><th style="width:82%;">Reality in the repo</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><b>Framework</b></td><td>Next.js <b>16.2.10</b> (App Router) + React 19 — <i>(README/old script say "Next.js 15" — that's wrong; you're on 16)</i></td></tr>
+    <tr><td><b>Database</b></td><td>PostgreSQL via <code>node-postgres</code>, <b>21 tables</b> — all 8 Master + all 9 Transactional models from Section 4</td></tr>
+    <tr><td><b>Auth</b></td><td>PBKDF2 (10,000 iterations) + AES-256-CBC HttpOnly session cookies — <code>auth-utils.js</code></td></tr>
+    <tr><td><b>AI</b></td><td>Gemini <b><code>gemini-flash-latest</code></b> <i>(old script says <code>gemini-2.5-flash</code> — wrong)</i>, with a <b>graceful fallback</b> so AI buttons work even with no API key/network — <code>generate-quest/route.js</code></td></tr>
+    <tr><td><b>UI</b></td><td>One client page <code>page.js</code> (4,093 lines), 8 nav tabs: Dashboard, Environmental, Social, Governance, Gamification, Reports, Settings, Admin Panel (admin-only)</td></tr>
+    <tr><td><b>Scoring</b></td><td><code>business-rules.js</code>: Env <code>100 − emissions/500</code>, Social <code>60 + 10×approved</code>, Gov <code>100 − 15/open − 30/overdue</code>, weighted <b>40/30/30</b></td></tr>
+  </tbody>
+</table>
+<p><b>Every Section 8 mandatory rule is implemented:</b> Auto Emission Calc, Evidence Requirement, Badge Auto-Award, Compliance Owner+Due Date+overdue flagging, Reward Redemption (deducts points <b>and</b> stock), Notification System.</p>
+<div class="callout"><b>One lucky demo detail:</b> the seeded compliance issue "E-Waste storage drums" is due <code>2026-06-30</code> and today is <code>2026-07-12</code> — so it's <b>genuinely overdue on screen</b>, which makes the Governance demo real, not staged.</div>
+
+<h2>Pre-Recording Checklist (run once, verify it's green)</h2>
+<pre># 1. Ensure PostgreSQL is running and .env is filled
+#    (PGUSER/PGPASSWORD/PGHOST/PGPORT/PGDATABASE, GEMINI_API_KEY)
+node scripts/db-setup.js          # creates 21 tables + seeds
+node scripts/db-auth-migration.js # creates users, PBKDF2 hashes, XP balances
+npm run dev                       # http://localhost:3000</pre>
+<p>Record at <b>1080p, full-screen browser</b>, sidebar visible. Login accounts: <code>john_doe / Password123</code> (employee), <code>admin / AdminPass123</code> (admin).</p>
+
+<h2 style="page-break-before: always;">🎬 The Script (~8 min)</h2>
+
+<div class="chapter">
+  <div class="timestamp">[0:00–0:50] — Intro &amp; Login</div>
+  <p class="action">🖱 <b>Do:</b> Start on <code>localhost:3000</code> login screen. Type <code>john_doe</code> / <code>Password123</code>, click Login. Land on Dashboard.</p>
+  <blockquote>🎤 "Hi, welcome to <b>EcoSphere</b> — an ESG Management and Carbon Observatory platform built for the Odoo hackathon challenge. The problem is that ESG reporting today is manual, siloed in spreadsheets, and impossible to monitor in real time. EcoSphere fixes that by pulling Environmental, Social, and Governance data into one live dashboard, and making sustainability engaging through gamification.<br><br>
+  Under the hood this is <b>Next.js 16 with React 19, a 21-table PostgreSQL database, and Google Gemini AI</b>. Notice I'm logging in with real credentials — authentication uses <b>PBKDF2 password hashing with AES-256 encrypted session cookies</b>, not a fake login."</blockquote>
+  <span class="align">📌 Covers: Sections 1, 2 (background, unified platform)</span>
+</div>
+
+<div class="chapter">
+  <div class="timestamp">[0:50–1:40] — Unified Dashboard</div>
+  <p class="action">🖱 <b>Do:</b> Point to the <b>Scope 1 &amp; 2 Emissions Observatory</b> card, the three E/S/G pillar cards, and scroll to the <b>Department Performance</b> table (ENG, OPS, HR, MKT with Environmental / Social / Governance / Total scores).</p>
+  <blockquote>🎤 "This is the unified dashboard. Up top, the three ESG pillars — Environmental, Social, Governance — each with live rollups: carbon footprint, CSR and training completion, and open compliance issues.<br><br>
+  The key number is the <b>Overall ESG Score</b>. It's not hard-coded — it's calculated per department, then rolled up. Each department gets an Environmental, Social, and Governance score, combined using a <b>configurable weighting: 40% Environmental, 30% Social, 30% Governance</b> — exactly the default from Section 5 of the brief. Engineering, Operations, HR, and Sales each score independently, and the organization score is the weighted average across all of them."</blockquote>
+  <span class="align">📌 Covers: Section 5 (weighted department → org rollup)</span>
+</div>
+
+<div class="chapter">
+  <div class="timestamp">[1:40–2:50] — Environmental + Auto Emission Calculation</div>
+  <p class="action">🖱 <b>Do:</b> Click <b>Environmental</b>. Show <b>Emission Factors</b> table (Grid Electricity 0.85, Diesel 2.68, Air Travel, etc.). Scroll to <b>Log Carbon Transaction</b> — pick <i>Electricity (Grid)</i>, department <i>Engineering</i>, type <code>350</code> → point at the auto-previewed emissions → Submit. Then scroll to <b>Carbon Offset Simulator &amp; ESG Score Predictor</b>, drag a slider, show <i>Simulated Footprint</i> and <i>Simulated ESG</i> update live.</p>
+  <blockquote>🎤 "The Environmental module is our carbon ledger. This is master data — emission factors from EPA and UK DESNZ guidelines, across Scope 1 fuels, Scope 2 electricity, and Scope 3 supply chain.<br><br>
+  Here's the <b>Auto Emission Calculation</b> rule from Section 8 in action. I log an operational transaction — 350 kilowatt-hours of grid electricity — and the system <b>automatically multiplies amount by emission factor</b> to get the exact CO2-equivalent. No manual math, no entry errors. That's <code>calculated_emissions = source_amount × emission_factor</code>, done server-side.<br><br>
+  Below is something extra we built — an <b>Offset Simulator</b>. Management can model 'what if we shift 60% to renewables' or 'cut travel by 25%', and watch the projected footprint and ESG score move in real time — a planning tool, not just a report."</blockquote>
+  <span class="align">📌 Covers: Sections 3, 6 (emission factors, carbon accounting) + Section 8 (Auto Emission Calc) + bonus</span>
+</div>
+
+<div class="chapter">
+  <div class="timestamp">[2:50–3:50] — Social + Evidence Requirement</div>
+  <p class="action">🖱 <b>Do:</b> Click <b>Social</b>. Show <b>CSR activities</b> (Tree Planting, E-Waste Collection). Use <b>Submit CSR Participation</b> to log an entry. Then show the <b>CSR Participations Approvals Panel</b> — try to Approve one <i>without</i> proof to show it's blocked, then approve one <i>with</i> proof.</p>
+  <blockquote>🎤 "The Social module tracks CSR activities, employee participation, and engagement. Employees submit participation with a completion date and a proof file.<br><br>
+  Now watch the <b>Evidence Requirement</b> rule — another Section 8 mandate. This toggle is on in Settings, so when a manager tries to approve participation <b>without an attached proof file, the system blocks it</b>. Only with valid evidence can it be approved — and the moment it's approved, points flow to the employee and lift that department's Social score."</blockquote>
+  <span class="align">📌 Covers: Sections 3, 6 (CSR, participation) + Section 8 (Evidence Requirement)</span>
+</div>
+
+<div class="chapter">
+  <div class="timestamp">[3:50–4:55] — Governance + Overdue Compliance</div>
+  <p class="action">🖱 <b>Do:</b> Click <b>Governance</b>. Show <b>ESG Policies</b>, click <b>Acknowledge</b> on one. Scroll to <b>Compliance Issues Ledger</b> — point at the issue with <b>Owner: Marcus Wright, Due 2026-06-30</b> shown as <b>overdue/flagged</b>. Use <b>Raise Compliance Issue</b> to show Owner + Due Date are required. Click the 🔔 notification bell to show the auto-generated CRITICAL alert.</p>
+  <blockquote>🎤 "Governance covers policies, acknowledgements, audits, and compliance issues. I can digitally acknowledge a corporate policy here — that's tracked per employee.<br><br>
+  Section 8 requires that every compliance issue has an <b>Owner and a Due Date</b> — you can see the form enforces both. And here's the automation: this issue was due June 30th, today is July 12th, so it's <b>overdue</b>. Our backend <code>checkOverdueComplianceIssues</code> job flags it, fires a <b>CRITICAL notification</b> — you can see it in the bell here — and <b>docks the department's Governance score by 30 points, double the 15-point penalty of a normal open issue</b>. Accountability is enforced automatically."</blockquote>
+  <span class="align">📌 Covers: Sections 3, 6 (policies, audits, compliance) + Section 8 (Ownership + overdue flagging)</span>
+</div>
+
+<div class="chapter">
+  <div class="timestamp">[4:55–6:10] — Gamification + Gemini AI + Rewards</div>
+  <p class="action">🖱 <b>Do:</b> Click <b>Gamification</b>. Show <b>Active Sustainability Challenges</b> with lifecycle statuses (Draft → Active → Under Review → Completed → Archived). Click the <b>AI generate</b> button for a challenge (Gemini). Play one question of <b>Eco-Quest ESG Knowledge Bowl</b>. Show <b>Employee Badges Shelf</b>, then <b>Redeemable Rewards Catalog</b> — click <b>Redeem</b> and show stock decrement. Show the <b>Leaderboard</b>.</p>
+  <blockquote>🎤 "Gamification is how we drive participation. Challenges follow the <b>full lifecycle from the brief — Draft, Active, Under Review, Completed, or Archived</b>.<br><br>
+  To go beyond a standard CRUD app, we wired in <b>Google Gemini</b>. One click on our <b>AI Quest Architect</b> generates a fresh, context-aware sustainability challenge — and our <b>Eco-Quest quiz</b> generates ESG questions on Scope 1/2/3 and governance, awarding XP and points per correct answer. And it's built to be demo-safe — if the AI is ever unreachable, it gracefully falls back to a local generator, so it never breaks on stage.<br><br>
+  Two more Section 8 rules live here: <b>Badge Auto-Award</b> — badges unlock the instant an employee's XP or completed-challenge count hits the rule, no admin needed — and <b>Reward Redemption</b>. When I redeem this reward, it <b>deducts the employee's points and decrements catalog stock</b> in one transaction. And the <b>Leaderboard</b> ranks everyone by XP."</blockquote>
+  <span class="align">📌 Covers: Section 6 (full lifecycle, XP, badges, leaderboards) + Section 8 (Badge Auto-Award, Reward Redemption) + Section 9 (Gemini AI bonus)</span>
+</div>
+
+<div class="chapter">
+  <div class="timestamp">[6:10–7:00] — Reports (Custom Builder, CSV, Print)</div>
+  <p class="action">🖱 <b>Do:</b> Click <b>Reports</b>. Show the <b>Observatory Custom Report Builder</b> filters (Module, Department, Date Range). Generate the <b>ESG Executive Summary Report</b>. Click <b>Export CSV</b>. Then press <b>Ctrl+P</b> / <b>Print</b> to show the clean <code>@media print</code> <b>Audit Sheet / Certificate</b>.</p>
+  <blockquote>🎤 "Reports fulfill Section 7. The <b>Custom Report Builder</b> lets managers combine filters — department, module, date range — to generate Environmental, Social, Governance, or consolidated <b>ESG Summary</b> reports. I can <b>export to CSV</b> — cleanly encoded so commas and quotes never corrupt fields — or trigger our <b>print engine</b>, which uses a dedicated print stylesheet to strip the navigation and produce a <b>board-ready audit sheet and certificate</b>."</blockquote>
+  <span class="align">📌 Covers: Section 7 (all report types + CSV export + filters) + Section 9 (printable audits bonus)</span>
+</div>
+
+<div class="chapter">
+  <div class="timestamp">[7:00–7:45] — Settings &amp; Admin Panel</div>
+  <p class="action">🖱 <b>Do:</b> Click <b>Settings</b>. Show the three <b>weight</b> fields and three <b>toggles</b> (Auto Emission Calculation, Evidence Requirement, Badge Auto-Award). Then log out, log in as <code>admin / AdminPass123</code>, click <b>Admin Panel</b> — show <b>Total Registered Users</b>, <b>Carbon Ledger Entries</b>, <b>Open Compliance Violations</b>, and <b>System Telemetry &amp; Live API Health</b>.</p>
+  <blockquote>🎤 "Everything is configurable. In <b>Settings</b>, the organization tunes its ESG weightings and flips the three business-rule toggles I demonstrated — Auto Emission Calculation, Evidence Requirement, and Badge Auto-Award — on or off.<br><br>
+  And logging in as an administrator unlocks the <b>Admin Panel</b> — role-based access. Admins see registered users, total carbon ledger entries, open compliance violations, and a <b>live system telemetry board</b> monitoring API health and database connections in real time."</blockquote>
+  <span class="align">📌 Covers: Section 6 (Settings &amp; Administration), Section 8 (configuration), role-based access</span>
+</div>
+
+<div class="chapter">
+  <div class="timestamp">[7:45–8:15] — Close</div>
+  <p class="action">🖱 <b>Do:</b> Return to Dashboard.</p>
+  <blockquote>🎤 "So that's EcoSphere. Every master and transactional data model from the brief, every mandatory business rule — auto emissions, evidence enforcement, compliance ownership, badge auto-award, reward redemption, and notifications — plus the full weighted scoring model, all in one live, secured, gamified platform, enhanced with Gemini AI. Thanks for watching."</blockquote>
+  <span class="align">📌 Covers: full recap</span>
+</div>
+
+<h2>Two Accuracy Fixes to Make Before You Record</h2>
+<p>Your existing <code>EcoSphere_Walkthrough_Script.html</code> has two factual errors that a sharp judge could catch:</p>
+<ol>
+  <li>It says <b>"Next.js 15"</b> — the code is <b>Next.js 16.2.10</b>.</li>
+  <li>It says Gemini <b><code>gemini-2.5-flash</code></b> — the code calls <b><code>gemini-flash-latest</code></b>.</li>
+</ol>
+<p>The script above is accurate to the code.</p>
+
+</body>
+</html>
